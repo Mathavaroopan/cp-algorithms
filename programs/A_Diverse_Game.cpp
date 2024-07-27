@@ -9,6 +9,7 @@
 #define input(arr) for(int& a : arr) cin >> a
 #define print(arr) for(int i : arr) cout << i << " "
 #define var(a) cout << #a << " = " << a << endl
+#define min(arr) *min_element(arr.begin(), arr.end())
 #define max(arr) *max_element(arr.begin(), arr.end())
 #define sum(arr) accumulate(arr.begin(), arr.end(), 0)
 #define endl '\n'
@@ -16,28 +17,30 @@ using namespace std;
 
 const int mod = 1e9 + 7;
 int inf = 1e18;
-vector<int> arr(402, 0);
-vector<int> prefix(402, 0);
-int dp[402][402];
-
-int fun(int l, int r){
-    if(l == r) return 0;
-    if(dp[l][r] != -1) return dp[l][r];
-    int ans = 1e18;
-    for(int k = l + 1; k <= r; k++){
-        ans = min(ans, prefix[r + 1] - prefix[l] + fun(l, k - 1) + fun(k, r));
-    }
-    return dp[l][r] = ans;
-}
 
 void solve(){
-    int n; cin >> n;
+    int n, m;
+    cin >> n >> m;
+    vector<vector<int>> arr(n, vector<int>(m));
     for(int i = 0; i < n; i++){
-        cin >> arr[i];
-        prefix[i + 1] = arr[i] + prefix[i];
+        for(int j = 0; j < m; j++){
+            cin >> arr[i][j];
+            if(arr[i][j] & 1) arr[i][j]++;
+            else arr[i][j]--;
+        }
     }
-    memset(dp, -1, sizeof(dp));
-    cout << fun(0, n - 1) << endl;
+    if(n == 1 && m == 1){
+        cout << -1 << endl;
+        return;
+    }
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            if(arr[i][j] == 2 && (n * m) & 1) arr[i][j] = n * m;
+            else if(arr[i][j] == (n * m + 1) && (n * m) & 1) arr[i][j] = 2;
+            cout << arr[i][j] << " ";
+        }
+        cout << endl;
+    }   
 }
  
 int32_t main()
@@ -47,7 +50,7 @@ int32_t main()
     cin.tie(NULL);
  
     int T = 1;
-    // cin >> T;
+    cin >> T;
     while (T--) solve();
     return 0;
 }

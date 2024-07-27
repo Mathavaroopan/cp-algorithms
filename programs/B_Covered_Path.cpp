@@ -9,27 +9,26 @@
 #define input(arr) for(int& a : arr) cin >> a
 #define print(arr) for(int i : arr) cout << i << " "
 #define var(a) cout << #a << " = " << a << endl
+#define min(arr) *min_element(arr.begin(), arr.end())
 #define sum(arr) accumulate(arr.begin(), arr.end(), 0)
 #define endl '\n'
 using namespace std;
 
 const int mod = 1e9 + 7;
 int inf = 1e18;
-int arr[3003];
-int dp[3003][3003];
-
-int fun(int l, int r){
-    if(l > r) return 0;
-    if(dp[l][r] != -1) return dp[l][r];
-    return dp[l][r] = max(arr[l] - fun(l + 1, r), arr[r] - fun(l, r - 1));
+int v1, v2, t, d;
+int fun(int v1, int x, map<pair<int, int>, int>& dp){
+    if(x == 1) return (v1 == v2) ? v1 : -1e9;
+    if(dp.find({v1, x}) != dp.end()) return dp[{v1, x}];
+    int ans = -1e9;
+    for(int i = v1 - d; i <= v1 + d; i++) ans = max(ans, v1 + fun(i, x - 1, dp)); 
+    return dp[{v1, x}] = ans;
 }
 
 void solve(){
-    int n;
-    cin >> n;
-    for(int i = 0; i < n; i++) cin >> arr[i];
-    memset(dp, -1, sizeof(dp));
-    cout << fun(0, n - 1) << endl;    
+    cin >> v1 >> v2 >> t >> d;
+    map<pair<int, int>, int> dp;
+    cout << fun(v1, t, dp) << endl;  
 }
  
 int32_t main()

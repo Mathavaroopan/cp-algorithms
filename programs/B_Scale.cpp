@@ -9,27 +9,29 @@
 #define input(arr) for(int& a : arr) cin >> a
 #define print(arr) for(int i : arr) cout << i << " "
 #define var(a) cout << #a << " = " << a << endl
+#define min(arr) *min_element(arr.begin(), arr.end())
+#define max(arr) *max_element(arr.begin(), arr.end())
 #define sum(arr) accumulate(arr.begin(), arr.end(), 0)
 #define endl '\n'
 using namespace std;
 
 const int mod = 1e9 + 7;
 int inf = 1e18;
-int arr[3003];
-int dp[3003][3003];
-
-int fun(int l, int r){
-    if(l > r) return 0;
-    if(dp[l][r] != -1) return dp[l][r];
-    return dp[l][r] = max(arr[l] - fun(l + 1, r), arr[r] - fun(l, r - 1));
-}
 
 void solve(){
-    int n;
-    cin >> n;
-    for(int i = 0; i < n; i++) cin >> arr[i];
-    memset(dp, -1, sizeof(dp));
-    cout << fun(0, n - 1) << endl;    
+    int n, k;
+    cin >> n >> k;
+    vector<string> arr(n);
+    for(auto& a : arr) cin >> a;
+    vector<string> ans;
+    for(int i = 0; i < n; i += k){
+        string temp = "";
+        for(int j = 0; j < n; j += k){
+            temp += arr[i][j];
+        }
+        ans.push_back(temp);
+    }
+    for(auto s : ans) cout << s << endl;
 }
  
 int32_t main()
@@ -39,7 +41,7 @@ int32_t main()
     cin.tie(NULL);
  
     int T = 1;
-    // cin >> T;
+    cin >> T;
     while (T--) solve();
     return 0;
 }

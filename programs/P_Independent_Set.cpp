@@ -9,27 +9,44 @@
 #define input(arr) for(int& a : arr) cin >> a
 #define print(arr) for(int i : arr) cout << i << " "
 #define var(a) cout << #a << " = " << a << endl
+#define min(arr) *min_element(arr.begin(), arr.end())
+#define max(arr) *max_element(arr.begin(), arr.end())
 #define sum(arr) accumulate(arr.begin(), arr.end(), 0)
 #define endl '\n'
 using namespace std;
 
 const int mod = 1e9 + 7;
 int inf = 1e18;
-int arr[3003];
-int dp[3003][3003];
+int N = 1e6;
+vector<vector<int>> arr(N);
 
-int fun(int l, int r){
-    if(l > r) return 0;
-    if(dp[l][r] != -1) return dp[l][r];
-    return dp[l][r] = max(arr[l] - fun(l + 1, r), arr[r] - fun(l, r - 1));
+int fun(int node, int prevcolor){
+    if(arr[node].size() == 0) return 1;
+    int ans = 0;
+    for(auto it : arr[node]){
+        ans += fun(it, !prevcolor);
+        if(prevcolor) ans += fun(it, prevcolor);
+    }
+    return ans;
 }
-
 void solve(){
     int n;
     cin >> n;
-    for(int i = 0; i < n; i++) cin >> arr[i];
-    memset(dp, -1, sizeof(dp));
-    cout << fun(0, n - 1) << endl;    
+    vector<int> vis(n + 1, 0);
+    for(int i = 1; i < n; i++){
+        int a, b; cin >> a >> b;
+        arr[a].push_back(b);
+        arr[b].push_back(a);
+        vis[b] = 1;
+    }
+    int root = 0;
+    for(int i = 1; i <= n; i++){
+        if(vis[i] == 0){
+            root = i;
+            break;
+        }
+    }
+    cout << fun(root, 1) + fun(root, 0) << endl;
 }
  
 int32_t main()
