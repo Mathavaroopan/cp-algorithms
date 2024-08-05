@@ -15,7 +15,7 @@
 #define endl '\n'
 using namespace std;
 
-const int mod = 1e9 + 7;
+const int mod = 1e9 + 7;    
 int inf = 1e18;
 
 void solve(){

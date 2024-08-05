@@ -16,28 +16,48 @@ using namespace std;
 
 const int mod = 1e9 + 7;
 int inf = 1e18;
+vector<vector<pair<int, int>>> g, g1;
+bool dfs(int node, set<int>& nodes, vector<int>& vis){
+    vis[node] = 1;
+    if(nodes.count(node)) return true;
+    for(auto [v, w] : g[node]){
+        if(!vis[v] && dfs(v, nodes, vis)) return true;
+    }
+    return false;
+}
+
+void dfsforone(int node, vector<int>& one){
+    one[node] = 1;
+    for(auto [v, w] : g1[node]) if(!one[v]) dfsforone(v, one);
+}
 
 void solve(){
     int n, m;
     cin >> n >> m;
     vector<vector<int>> arr;
+    g.resize(n);
+    g1.resize(n);
     for(int i = 0; i < m; i++){
         int u, v, w; cin >> u >> v >> w; u--, v--;
         arr.push_back({u, v, w});
+        g[v].push_back({u, w});
+        g1[u].push_back({v, w});
     }
-    vector<int> dist(n, -inf);
+    vector<int> dist(n, -inf), vis(n, 0), one(n, 0);
+    dfsforone(0, one);
     dist[0] = 0;
+    set<int> nodes;
     for(int i = 0; i < n; i++){
         for(auto it : arr){
             int u = it[0], v = it[1], w = it[2];
-            if(i == n - 1 && dist[v] < dist[u] + w && v == n - 1){
-                cout << -1 << endl;
-                return;
+            if(i == n - 1 && dist[v] < dist[u] + w && one[v]){
+                nodes.insert(v);
             }   
             dist[v] = max(dist[v], dist[u] + w);
         }
     }
-    cout << dist[n - 1] << endl;
+    if(dfs(n - 1, nodes, vis)) cout << -1 << endl;
+    else cout << dist[n - 1] << endl;
 }
  
 int32_t main()
